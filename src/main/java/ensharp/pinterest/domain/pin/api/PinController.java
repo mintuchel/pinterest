@@ -19,7 +19,10 @@ public class PinController {
     private final PinService pinService;
 
     @PostMapping("/upload")
-    public void createPin(@RequestPart CreatePinRequest createPinRequest) throws IOException {
+    public void createPin(@ModelAttribute CreatePinRequest createPinRequest) throws IOException {
+        System.out.println(createPinRequest.getImage().getName());
+        System.out.println(createPinRequest.getImage().getContentType());
+        System.out.println(createPinRequest.getImage().getSize());
         pinService.createPin(createPinRequest);
     }
 
