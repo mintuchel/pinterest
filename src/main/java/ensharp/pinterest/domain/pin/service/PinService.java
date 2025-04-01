@@ -21,6 +21,7 @@ public class PinService {
 
     @Transactional
     public void createPin(CreatePinRequest createPinRequest) {
+
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
         User user = userRepository.findByEmail(createPinRequest.getEmail())
