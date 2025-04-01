@@ -22,12 +22,8 @@ public class S3Service {
 
     public S3ObjectInfo uploadImageToS3(MultipartFile file) {
         // 파일에 대한 S3 Key 값인 UUID 생성
-        String s3Key = UUID.randomUUID().toString();
-
-        System.out.println("name: " + file.getName());
-        System.out.println("type: " + file.getContentType());
-        System.out.println("original filename: " + file.getOriginalFilename());
-        System.out.println("size: " + file.getSize());
+        String originalFilename = file.getOriginalFilename(); // 김고은.jpeg
+        String s3Key = UUID.randomUUID().toString() + "-" + originalFilename;
 
         // 파일 메타데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
