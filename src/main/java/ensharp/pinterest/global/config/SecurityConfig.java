@@ -27,6 +27,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/**").permitAll() // 모든 컨트롤러 공개
                         .requestMatchers("/api/v1/email-verification/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").permitAll()
+                        .requestMatchers("/api/v1/pin/**").permitAll()
+                        .requestMatchers("/api/v1/favorite/**").permitAll()
+                        .requestMatchers("/api/v1/comment/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 외부 공개
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
