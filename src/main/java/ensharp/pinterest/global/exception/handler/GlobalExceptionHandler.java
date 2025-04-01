@@ -1,6 +1,7 @@
 package ensharp.pinterest.global.exception.handler;
 
 import ensharp.pinterest.global.exception.exception.EmailException;
+import ensharp.pinterest.global.exception.exception.PinException;
 import ensharp.pinterest.global.exception.exception.UserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getEmailErrorCode().getHttpStatus())
                 .body(e.getEmailErrorCode().getMessage());
+    }
+
+    @ExceptionHandler(value = PinException.class)
+    protected ResponseEntity<String> handlePinException(PinException e) {
+        return ResponseEntity
+                .status(e.getPinErrorCode().getHttpStatus())
+                .body(e.getPinErrorCode().getMessage());
     }
 
     // Jakarta Validation 관련 에러 처리 (DTO 형식 관련)

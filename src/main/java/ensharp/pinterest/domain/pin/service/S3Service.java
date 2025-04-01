@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
 import ensharp.pinterest.global.config.S3Config;
+import ensharp.pinterest.global.exception.errorcode.PinErrorCode;
+import ensharp.pinterest.global.exception.exception.PinException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,16 @@ public class S3Service {
         }
 
         return new S3ObjectInfo(s3Key, getPublicUrl(s3Key));
+    }
+
+    public boolean deleteImageFromS3(String s3Key) {
+        boolean doesObjectExist = s3Config.amazonS3().doesObjectExist(bucket, s3Key);
+        if (doesObjectExist) {
+            s3Config.amazonS3().deleteObject(bucket, s3Key);
+        } else {
+            throw new PinException(PinErrorCode.PIN_NOT_FOUND);
+        }
+        return true;
     }
 
     // S3에 저장 후 해당 URL 을 들어가면 이미지가 나옴

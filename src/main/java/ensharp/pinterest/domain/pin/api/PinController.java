@@ -1,14 +1,14 @@
 package ensharp.pinterest.domain.pin.api;
 
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
+import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
 import ensharp.pinterest.domain.pin.service.PinService;
-import ensharp.pinterest.domain.pin.service.S3Service;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,14 +18,23 @@ public class PinController {
 
     private final PinService pinService;
 
+    @GetMapping("/{s3Key}")
+    public void getPin(@PathVariable String s3Key){
+
+    }
+
     @PostMapping("/upload")
     public void createPin(@ModelAttribute CreatePinRequest createPinRequest){
         pinService.createPin(createPinRequest);
     }
 
     @DeleteMapping("")
-    public void deletePin(@RequestParam("id") int id) {
+    public ResponseEntity<Void> deletePin(@Valid @RequestBody DeletePinRequest deletePinRequest) {
+        pinService.deletePin(deletePinRequest);
 
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @PatchMapping("")
