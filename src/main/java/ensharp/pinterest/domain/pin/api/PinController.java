@@ -1,5 +1,7 @@
 package ensharp.pinterest.domain.pin.api;
 
+import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
+import ensharp.pinterest.domain.pin.service.PinService;
 import ensharp.pinterest.domain.pin.service.S3Service;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +16,11 @@ import java.io.IOException;
 @Tag(name = "핀 API", description = "핀 업로드/수정/삭제")
 public class PinController {
 
-    private final S3Service s3Service;
+    private final PinService pinService;
 
     @PostMapping("/upload")
-    public void createPin(
-            @RequestPart("email") String email,
-            @RequestPart("title") String title,
-            @RequestPart("description") String description,
-            @RequestPart("tag") String tag,
-            @RequestPart("image") MultipartFile image) throws IOException {
-        String imageUrl = s3Service.createPin(image);
-
-
+    public void createPin(@RequestPart CreatePinRequest createPinRequest) throws IOException {
+        pinService.createPin(createPinRequest);
     }
 
     @DeleteMapping("")
