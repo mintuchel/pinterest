@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
-    public ResponseEntity<Integer> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.signUp(signUpRequest));

@@ -21,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public int signUp(SignUpRequest signUpRequest){
+    public String signUp(SignUpRequest signUpRequest){
 
         // 이미 해당 이메일 유저가 존재한다면 예외 던지기
         if(userRepository.existsByEmail(signUpRequest.email())){

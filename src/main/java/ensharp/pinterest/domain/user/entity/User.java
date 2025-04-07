@@ -11,9 +11,9 @@ import lombok.*;
 @Table(name = "user_table")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id")
-    private int id;
+    private String id;
 
     // 이메일
     @Column(nullable = false, unique = true, length = 30)
