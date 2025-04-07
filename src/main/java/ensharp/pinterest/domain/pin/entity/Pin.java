@@ -12,8 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 public class Pin extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -22,6 +22,9 @@ public class Pin extends BaseEntity {
     // S3에 업로드된 객체(파일)에 접근할 수 있는 전체 URL
     @Column(nullable = false)
     private String s3Url;
+
+    @Column(nullable = false)
+    private String authorName;
 
     // S3 내부에서 객체(파일)를 찾을 때 사용하는 경로(고유 식별자)
     @Column(nullable = false)

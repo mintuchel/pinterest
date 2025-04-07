@@ -2,13 +2,17 @@ package ensharp.pinterest.domain.pin.api;
 
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
 import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
+import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.service.PinService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,17 +22,28 @@ public class PinController {
 
     private final PinService pinService;
 
-    @GetMapping("/{s3Key}")
-    public void getPin(@PathVariable String s3Key){
+    // ?query="" 이런 형식으로 처리됨
+    // requestparam 없이 /api/v1/pin으로 보내도 정상적으로 동작
+    @GetMapping("")
+    @Operation(summary = "유저 쿼리에 기반한 Pin 썸네일 조회")
+    public List<PinThumbnailResponse> getPinThumbnails(@RequestParam(defaultValue = "") String query){
+        return pinService.getPinThumbnails(query);
+    }
+
+    @GetMapping("/{pinId}")
+    @Operation(summary = "특정 Pin 정보 조회")
+    public void getPinInfo(@PathVariable String pinId){
 
     }
 
     @PostMapping("/upload")
+    @Operation(summary = "Pin 업로드")
     public void createPin(@ModelAttribute CreatePinRequest createPinRequest){
         pinService.createPin(createPinRequest);
     }
 
     @DeleteMapping("")
+    @Operation(summary = "Pin 삭제")
     public ResponseEntity<Void> deletePin(@Valid @RequestBody DeletePinRequest deletePinRequest) {
         pinService.deletePin(deletePinRequest);
 
@@ -38,6 +53,7 @@ public class PinController {
     }
 
     @PatchMapping("")
+    @Operation(summary = "Pin 업데이트")
     public void updatePin() {
 
     }

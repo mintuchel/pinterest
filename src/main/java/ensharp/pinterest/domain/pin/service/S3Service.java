@@ -22,6 +22,17 @@ public class S3Service {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
+    public S3ObjectInfo getImageInfoFromS3(String s3Key){
+        boolean doesObjectExist = s3Config.amazonS3().doesObjectExist(bucket, s3Key);
+
+        if(!doesObjectExist){
+            throw new PinException(PinErrorCode.PIN_NOT_FOUND);
+        }
+
+        String publicUrl = getPublicUrl(s3Key);
+        return new S3ObjectInfo(s3Key, publicUrl);
+    }
+
     public S3ObjectInfo uploadImageToS3(MultipartFile file) {
         // 파일에 대한 S3 Key 값인 UUID 생성
         String originalFilename = file.getOriginalFilename(); // 김고은.jpeg
