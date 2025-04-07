@@ -10,7 +10,7 @@ public record DeletePinRequest(
         @NotBlank(message = "이메일은 필수 입력 값입니다.")
         @Schema(description = "이메일 주소", example = "ensharp25@naver.com")
         String email,
-        @NotBlank(message = "s3 키값은 필수 입력 값입니다.")
-        @Schema(description = "s3key", example = "1a2b3c4d5e6f7g8h")
-        String s3key
+        @NotBlank(message = "pinId 키값은 필수 입력 값입니다.")
+        @Schema(description = "pinId", example = "1a2b3c4d5e6f7g8h")
+        String pinId
 ) { }
