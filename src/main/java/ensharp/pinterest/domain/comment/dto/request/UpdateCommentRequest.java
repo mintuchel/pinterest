@@ -2,5 +2,5 @@ package ensharp.pinterest.domain.comment.dto.request;
 
 public record UpdateCommentRequest(
     String commentId,
-    String content
+    String newContent
 ) { }

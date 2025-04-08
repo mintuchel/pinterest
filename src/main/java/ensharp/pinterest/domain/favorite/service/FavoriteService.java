@@ -15,7 +15,7 @@ public class FavoriteService {
 
     @Transactional(readOnly = true)
     public List<PinInfoResponse> getFavoritePins(){
-
+        return null;
     }
 
     @Transactional

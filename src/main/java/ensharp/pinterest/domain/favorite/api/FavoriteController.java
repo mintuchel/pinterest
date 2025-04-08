@@ -12,7 +12,7 @@ import java.util.List;
 public class FavoriteController {
     @GetMapping("")
     public List<PinInfoResponse> getFavoritePins(){
-
+        return null;
     }
 
     @PostMapping
