@@ -10,10 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+// uuid 는 PK 니 자동 인덱스 생성됨
 // email 에 인덱싱 걸어놓으면 좋을듯?
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);

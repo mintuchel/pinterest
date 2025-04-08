@@ -20,6 +20,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
+    public User getUserById(String userId){
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new UserException(UserErrorCode.USER_NOT_FOUND));
+    }
+
     @Transactional
     public String signUp(SignUpRequest signUpRequest){
 
