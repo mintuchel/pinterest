@@ -16,11 +16,13 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne
+    private String authorName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="pin_id")
     private Pin pin;
 

@@ -1,4 +1,5 @@
 package ensharp.pinterest.domain.comment.dto.request;
 
-public record DeleteCommentRequest() {
-}
+public record DeleteCommentRequest(
+    String commentId
+) { }
