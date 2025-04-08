@@ -33,7 +33,7 @@ public class BaseEntity {
     // 변경감지 기능을 통해 update 쿼리가 실행되었을때 실행되는 메서드
     @PreUpdate
     public void preUpdate() {
-        LocalDateTime now = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 }
 
