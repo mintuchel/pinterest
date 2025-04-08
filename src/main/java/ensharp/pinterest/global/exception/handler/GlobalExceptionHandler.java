@@ -1,5 +1,6 @@
 package ensharp.pinterest.global.exception.handler;
 
+import ensharp.pinterest.global.exception.exception.CommentException;
 import ensharp.pinterest.global.exception.exception.EmailException;
 import ensharp.pinterest.global.exception.exception.PinException;
 import ensharp.pinterest.global.exception.exception.UserException;
@@ -33,6 +34,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getPinErrorCode().getHttpStatus())
                 .body(e.getPinErrorCode().getMessage());
+    }
+
+    @ExceptionHandler(value = CommentException.class)
+    protected ResponseEntity<String> handleCommentException(CommentException e) {
+        return ResponseEntity
+                .status(e.getCommentErrorCode().getHttpStatus())
+                .body(e.getCommentErrorCode().getMessage());
     }
 
     // Jakarta Validation 관련 에러 처리 (DTO 형식 관련)
