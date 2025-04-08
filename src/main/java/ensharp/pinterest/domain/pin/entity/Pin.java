@@ -1,9 +1,13 @@
 package ensharp.pinterest.domain.pin.entity;
 
+import ensharp.pinterest.domain.comment.entity.Comment;
 import ensharp.pinterest.domain.common.BaseEntity;
 import ensharp.pinterest.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,4 +39,8 @@ public class Pin extends BaseEntity {
 
     @Column(nullable = false)
     private String description;
+
+    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 }

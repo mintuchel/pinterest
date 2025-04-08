@@ -1,5 +1,6 @@
 package ensharp.pinterest.domain.pin.service;
 
+import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
 import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
@@ -27,6 +28,15 @@ public class PinService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
+    public Pin getPinById(String pinId){
+        return pinRepository.findById(pinId)
+                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
+    }
+
+    /**
+     * query에 따른 List<PinThumbnail> 조회
+     */
+    @Transactional(readOnly = true)
     public List<PinThumbnailResponse> getPinThumbnails(String query){
 
         // 쿼리가 ""이면
@@ -40,13 +50,18 @@ public class PinService {
                 .map(PinThumbnailResponse::from).toList();
     }
 
+    /**
+     * 특정 Pin 조회
+     */
     @Transactional(readOnly = true)
     public PinInfoResponse getPin(String pinId){
-
+        return pinRepository.findById(pinId)
+                .map(PinInfoResponse::from)
+                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
 
     @Transactional
-    public void createPin(CreatePinRequest createPinRequest) {
+    public String createPin(CreatePinRequest createPinRequest) {
 
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
@@ -63,6 +78,9 @@ public class PinService {
                 .build();
 
         pinRepository.save(pin);
+
+        // 클라이언트에서 바로 리다이렉션 가능하도록 s3Url 반환
+        return pin.getS3Url();
     }
 
     @Transactional
@@ -82,5 +100,16 @@ public class PinService {
     @Transactional
     public void updatePin(){
 
+    }
+
+    @Transactional(readOnly = true)
+    public void getCommentsByPinId(String pinId){
+        Pin pin = pinRepository.findById(pinId)
+                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
+
+        return pin.getComments()
+                .stream()
+                .map(CommentInfoResponse::from)
+                .toList();
     }
 }

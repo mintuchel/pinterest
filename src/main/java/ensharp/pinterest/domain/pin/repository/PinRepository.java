@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PinRepository extends JpaRepository<Pin, String> {
-    Optional<Pin> findByS3Key(String s3Key);
-
-    Optional<Pin> findById(String pinId);
-
     @Query(value = "SELECT * FROM pin WHERE title LIKE %:query% OR description LIKE %:query%", nativeQuery = true)
     List<Pin> findAllByQuery(@Param("query") String query);
 }

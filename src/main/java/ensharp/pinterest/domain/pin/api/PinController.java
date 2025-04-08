@@ -1,7 +1,9 @@
 package ensharp.pinterest.domain.pin.api;
 
+import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
 import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
+import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.service.PinService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,20 +28,26 @@ public class PinController {
     // requestparam 없이 /api/v1/pin으로 보내도 정상적으로 동작
     @GetMapping("")
     @Operation(summary = "유저 쿼리에 기반한 Pin 썸네일 조회")
-    public List<PinThumbnailResponse> getPinThumbnails(@RequestParam(defaultValue = "") String query){
-        return pinService.getPinThumbnails(query);
+    public ResponseEntity<List<PinThumbnailResponse>> getPinThumbnails(@RequestParam(defaultValue = "") String query){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pinService.getPinThumbnails(query));
     }
 
     @GetMapping("/{pinId}")
     @Operation(summary = "특정 Pin 정보 조회")
-    public void getPinInfo(@PathVariable String pinId){
-
+    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .body(pinService.getPin(pinId));
     }
 
     @PostMapping("/upload")
     @Operation(summary = "Pin 업로드")
-    public void createPin(@ModelAttribute CreatePinRequest createPinRequest){
-        pinService.createPin(createPinRequest);
+    public ResponseEntity<String> createPin(@ModelAttribute CreatePinRequest createPinRequest){
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(pinService.createPin(createPinRequest));
     }
 
     @DeleteMapping("")
@@ -56,5 +64,14 @@ public class PinController {
     @Operation(summary = "Pin 업데이트")
     public void updatePin() {
 
+    }
+
+    @GetMapping("/{pinId}/comments")
+    @Operation(summary="특정 핀 댓글 조회")
+    public ResponseEntity<CommentInfoResponse> getCommentsByPinId(@PathVariable String pinId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(pinService.)
+                .build();
     }
 }
