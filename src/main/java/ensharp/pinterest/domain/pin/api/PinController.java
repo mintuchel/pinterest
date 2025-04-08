@@ -67,11 +67,10 @@ public class PinController {
     }
 
     @GetMapping("/{pinId}/comments")
-    @Operation(summary="특정 핀 댓글 조회")
-    public ResponseEntity<CommentInfoResponse> getCommentsByPinId(@PathVariable String pinId) {
+    @Operation(summary="특정 Pin 댓글 조회")
+    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable String pinId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(pinService.)
-                .build();
+                .body(pinService.getCommentsByPinId(pinId));
     }
 }

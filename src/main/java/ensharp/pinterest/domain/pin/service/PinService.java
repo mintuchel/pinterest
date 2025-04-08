@@ -103,7 +103,7 @@ public class PinService {
     }
 
     @Transactional(readOnly = true)
-    public void getCommentsByPinId(String pinId){
+    public List<CommentInfoResponse> getCommentsByPinId(String pinId){
         Pin pin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
