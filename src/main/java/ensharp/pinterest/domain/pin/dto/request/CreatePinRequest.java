@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @Getter
 public class CreatePinRequest {
-    private String email;
+    private String userId;
     private String title;
     private String description;
 

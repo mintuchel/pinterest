@@ -9,11 +9,9 @@ import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
 import ensharp.pinterest.domain.pin.entity.Pin;
 import ensharp.pinterest.domain.pin.repository.PinRepository;
 import ensharp.pinterest.domain.user.entity.User;
-import ensharp.pinterest.domain.user.repository.UserRepository;
+import ensharp.pinterest.domain.user.service.UserService;
 import ensharp.pinterest.global.exception.errorcode.PinErrorCode;
-import ensharp.pinterest.global.exception.errorcode.UserErrorCode;
 import ensharp.pinterest.global.exception.exception.PinException;
-import ensharp.pinterest.global.exception.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PinService {
     private final S3Service s3Service;
+    private final UserService userService;
+
     private final PinRepository pinRepository;
-    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Pin getPinById(String pinId){
@@ -65,8 +64,7 @@ public class PinService {
 
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
-        User user = userRepository.findByEmail(createPinRequest.getEmail())
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        User user = userService.getUserById(createPinRequest.getUserId());
 
         Pin pin = Pin.builder()
                 .title(createPinRequest.getTitle())
@@ -95,11 +93,6 @@ public class PinService {
 
         // Local DB에서도 삭제
         pinRepository.delete(targetPin);
-    }
-
-    @Transactional
-    public void updatePin(){
-
     }
 
     @Transactional(readOnly = true)
