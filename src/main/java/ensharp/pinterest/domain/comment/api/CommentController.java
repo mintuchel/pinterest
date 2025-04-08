@@ -41,7 +41,7 @@ public class CommentController {
         commentService.updateComment(request);
 
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 }

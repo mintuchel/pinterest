@@ -9,6 +9,8 @@ import ensharp.pinterest.domain.pin.entity.Pin;
 import ensharp.pinterest.domain.pin.service.PinService;
 import ensharp.pinterest.domain.user.entity.User;
 import ensharp.pinterest.domain.user.service.UserService;
+import ensharp.pinterest.global.exception.errorcode.CommentErrorCode;
+import ensharp.pinterest.global.exception.exception.CommentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,11 +41,17 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(DeleteCommentRequest request) {
+        Comment comment = commentRepository.findById(request.commentId())
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
+        commentRepository.delete(comment);
     }
 
     @Transactional
     public void updateComment(UpdateCommentRequest request) {
+        Comment comment = commentRepository.findById(request.commentId())
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
+        commentRepository.updateComment(request.commentId(), request.newContent());
     }
 }
