@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 // @RestController가 @ResponseBody를 포함하므로 리턴되는 객체가 자동으로 JSON으로 변환되며,
 // 응답의 Content-Type이 기본적으로 application/json으로 설정됨
 
@@ -40,7 +42,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
-    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<UUID> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.signUp(signUpRequest));

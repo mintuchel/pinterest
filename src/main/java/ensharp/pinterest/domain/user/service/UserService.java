@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -27,7 +29,7 @@ public class UserService {
     }
 
     @Transactional
-    public String signUp(SignUpRequest signUpRequest){
+    public UUID signUp(SignUpRequest signUpRequest){
 
         // 이미 해당 이메일 유저가 존재한다면 예외 던지기
         if(userRepository.existsByEmail(signUpRequest.email())){
