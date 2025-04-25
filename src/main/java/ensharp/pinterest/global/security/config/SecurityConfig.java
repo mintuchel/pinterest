@@ -1,4 +1,4 @@
-package ensharp.pinterest.global.security;
+package ensharp.pinterest.global.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
