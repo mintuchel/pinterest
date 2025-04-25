@@ -1,4 +1,4 @@
-package ensharp.pinterest.domain.user.dto.request;
+package ensharp.pinterest.domain.auth.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
