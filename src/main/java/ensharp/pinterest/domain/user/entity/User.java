@@ -3,6 +3,8 @@ package ensharp.pinterest.domain.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Builder
@@ -13,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id")
-    private String id;
+    private UUID id;
 
     // 이메일
     @Column(nullable = false, unique = true, length = 30)
