@@ -1,9 +1,6 @@
 package ensharp.pinterest.domain.user.api;
 
-import ensharp.pinterest.domain.user.dto.request.ChangePasswordRequest;
-import ensharp.pinterest.domain.user.dto.request.CheckEmailRequest;
-import ensharp.pinterest.domain.user.dto.request.LoginRequest;
-import ensharp.pinterest.domain.user.dto.request.SignUpRequest;
+import ensharp.pinterest.domain.auth.dto.ChangePasswordRequest;
 import ensharp.pinterest.domain.user.dto.response.UserInfoResponse;
 import ensharp.pinterest.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 // @RestController가 @ResponseBody를 포함하므로 리턴되는 객체가 자동으로 JSON으로 변환되며,
 // 응답의 Content-Type이 기본적으로 application/json으로 설정됨
@@ -38,41 +33,5 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getUserByEmail(email));
-    }
-
-    @PostMapping("/signup")
-    @Operation(summary = "회원가입")
-    public ResponseEntity<UUID> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(userService.signUp(signUpRequest));
-    }
-
-    @PostMapping("/email-check")
-    @Operation(summary = "이메일 중복 확인")
-    public ResponseEntity<String> checkIfEmailAvailable(@Valid @RequestBody CheckEmailRequest checkEmailRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.checkIfEmailAvailable(checkEmailRequest));
-    }
-
-    @PostMapping("/login")
-    @Operation(summary = "로그인")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.login(loginRequest).getUsername());
-    }
-
-    // RESTful 방식에서는 왜 noContent로 보내는 것이 적합하다고 하는 것일까
-    // 200 + body에 메시지 담아서 보내줘도 되는데
-    // 그냥 HttpStatus로 명확하게 얘기하는게 목표라서 그런 것일까??
-    @PatchMapping("/password")
-    @Operation(summary = "비밀번호 변경")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        userService.changePassword(changePasswordRequest);
-
-        // HttpStatus 204로 반환
-        return ResponseEntity.noContent().build();
     }
 }

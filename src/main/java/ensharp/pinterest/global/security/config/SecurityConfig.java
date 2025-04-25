@@ -42,14 +42,9 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // AuthenticationManager 에 필요한 PasswordEncoder 를 @Bean 으로 등록
+    // AuthenticationManager 에 필요한 bCryptPasswordEncoder 를 @Bean 으로 등록
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
@@ -62,7 +57,7 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join").permitAll() // 해당 컨트롤러들은 공개처리
+                        .requestMatchers("/auth/login", "/auth/signup", "/auth/email-check").permitAll() // 해당 API는 모든 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
@@ -74,21 +69,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
-
-//@Bean
-//public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//    http
-//            .authorizeHttpRequests(authorize -> authorize
-//                    .requestMatchers("/api/v1/user/**").permitAll() // 모든 컨트롤러 공개
-//                    .requestMatchers("/api/v1/email-verification/**").permitAll()
-//                    .requestMatchers("/api/v1/admin/**").permitAll()
-//                    .requestMatchers("/api/v1/pin/**").permitAll()
-//                    .requestMatchers("/api/v1/favorite/**").permitAll()
-//                    .requestMatchers("/api/v1/comment/**").permitAll()
-//                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 외부 공개
-//                    .anyRequest().authenticated() // 나머지는 인증 필요
-//            )
-//            .csrf(csrf -> csrf.disable()); // CSRF 비활성화 -> 이거 왜 함??
-//    return http.build();
-//}
