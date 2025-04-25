@@ -1,9 +1,9 @@
 package ensharp.pinterest.global.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ensharp.pinterest.domain.user.dto.request.LoginRequest;
 import ensharp.pinterest.global.security.jwt.JwtUtil;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
+import ensharp.pinterest.global.security.dto.LoginRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -24,10 +25,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
 
+    // ("/login", "POST") 일때만 작동하게끔 하는 기본설정을 변경하기 위한 커스텀 REQUEST_MATCHER
+    private final AntPathRequestMatcher LOGIN_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/auth/login", "POST");
+
     public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        super();
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+
+        // 부모의 set 함수를 통해 REQUEST_MATCHER 설정
+        setRequiresAuthenticationRequestMatcher(LOGIN_PATH_REQUEST_MATCHER);
     }
 
     @Override
