@@ -1,9 +1,6 @@
 package ensharp.pinterest.global.exception.handler;
 
-import ensharp.pinterest.global.exception.exception.CommentException;
-import ensharp.pinterest.global.exception.exception.EmailException;
-import ensharp.pinterest.global.exception.exception.PinException;
-import ensharp.pinterest.global.exception.exception.UserException;
+import ensharp.pinterest.global.exception.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +38,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getCommentErrorCode().getHttpStatus())
                 .body(e.getCommentErrorCode().getMessage());
+    }
+
+    @ExceptionHandler(value = FavoriteException.class)
+    protected ResponseEntity<String> handleFavoriteException(FavoriteException e) {
+        return ResponseEntity
+                .status(e.getFavoriteErrorCode().getHttpStatus())
+                .body(e.getFavoriteErrorCode().getMessage());
     }
 
     // Jakarta Validation 관련 에러 처리 (DTO 형식 관련)

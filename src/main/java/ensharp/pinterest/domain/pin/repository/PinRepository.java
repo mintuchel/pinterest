@@ -7,8 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface PinRepository extends JpaRepository<Pin, String> {
+public interface PinRepository extends JpaRepository<Pin, UUID> {
     @Query(value = "SELECT * FROM pin WHERE title LIKE %:query% OR description LIKE %:query%", nativeQuery = true)
     List<Pin> findAllByQuery(@Param("query") String query);
 }

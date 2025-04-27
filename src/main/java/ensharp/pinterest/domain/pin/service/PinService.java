@@ -2,7 +2,6 @@ package ensharp.pinterest.domain.pin.service;
 
 import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
-import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class PinService {
     private final PinRepository pinRepository;
 
     @Transactional(readOnly = true)
-    public Pin getPinById(String pinId){
+    public Pin getPinById(UUID pinId){
         return pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
@@ -53,18 +53,18 @@ public class PinService {
      * 특정 Pin 조회
      */
     @Transactional(readOnly = true)
-    public PinInfoResponse getPin(String pinId){
+    public PinInfoResponse getPin(UUID pinId){
         return pinRepository.findById(pinId)
                 .map(PinInfoResponse::from)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
 
     @Transactional
-    public String createPin(CreatePinRequest createPinRequest) {
+    public String createPin(UUID userId, CreatePinRequest createPinRequest) {
 
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
-        User user = userService.getUserById(createPinRequest.getUserId());
+        User user = userService.getUserById(userId);
 
         Pin pin = Pin.builder()
                 .title(createPinRequest.getTitle())
@@ -82,11 +82,16 @@ public class PinService {
     }
 
     @Transactional
-    public void deletePin(DeletePinRequest deletePinRequest) {
+    public void deletePin(UUID userId, UUID pinId) {
 
         // pinId로 삭제할 Pin 객체 조회
-        Pin targetPin = pinRepository.findById(deletePinRequest.pinId())
+        Pin targetPin = pinRepository.findById(pinId)
                 .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
+
+        // 해당 Pin 을 올린 유저가 아니라면
+        if(targetPin.getUser().getId().equals(userId)){
+            throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
+        }
 
         // s3Key로 S3에서 Pin 삭제
         boolean deleteSuccess = s3Service.deleteImageFromS3(targetPin.getS3Key());
@@ -95,8 +100,11 @@ public class PinService {
         pinRepository.delete(targetPin);
     }
 
+    @Transactional
+    public void updatePin(UUID userId, UpdateP)
+
     @Transactional(readOnly = true)
-    public List<CommentInfoResponse> getCommentsByPinId(String pinId){
+    public List<CommentInfoResponse> getCommentsByPinId(UUID pinId){
         Pin pin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 

@@ -2,19 +2,22 @@ package ensharp.pinterest.domain.pin.api;
 
 import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
-import ensharp.pinterest.domain.pin.dto.request.DeletePinRequest;
+import ensharp.pinterest.domain.pin.dto.request.UpdatePinRequest;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.service.PinService;
+import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +39,7 @@ public class PinController {
 
     @GetMapping("/{pinId}")
     @Operation(summary = "특정 Pin 정보 조회")
-    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
+    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable UUID pinId){
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(pinService.getPin(pinId));
@@ -44,31 +47,31 @@ public class PinController {
 
     @PostMapping("/upload")
     @Operation(summary = "Pin 업로드")
-    public ResponseEntity<String> createPin(@ModelAttribute CreatePinRequest createPinRequest){
+    public ResponseEntity<String> createPin(@AuthenticationPrincipal JwtUserDetails userDetails, @ModelAttribute CreatePinRequest createPinRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(pinService.createPin(createPinRequest));
+                .body(pinService.createPin(userDetails.getId(), createPinRequest));
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/{pinId}")
     @Operation(summary = "Pin 삭제")
-    public ResponseEntity<Void> deletePin(@Valid @RequestBody DeletePinRequest deletePinRequest) {
-        pinService.deletePin(deletePinRequest);
+    public ResponseEntity<Void> deletePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId) {
+        pinService.deletePin(userDetails.getId(), pinId);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
-    @PatchMapping("")
+    @PatchMapping("/{pinId}")
     @Operation(summary = "Pin 업데이트")
-    public void updatePin() {
+    public void updatePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId, @Valid @RequestBody UpdatePinRequest updatePinRequest) {
 
     }
 
     @GetMapping("/{pinId}/comments")
     @Operation(summary="특정 Pin 댓글 조회")
-    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable String pinId) {
+    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable UUID pinId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(pinService.getCommentsByPinId(pinId));

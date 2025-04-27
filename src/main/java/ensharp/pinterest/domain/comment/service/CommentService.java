@@ -1,7 +1,6 @@
 package ensharp.pinterest.domain.comment.service;
 
 import ensharp.pinterest.domain.comment.dto.request.CreateCommentRequest;
-import ensharp.pinterest.domain.comment.dto.request.DeleteCommentRequest;
 import ensharp.pinterest.domain.comment.dto.request.UpdateCommentRequest;
 import ensharp.pinterest.domain.comment.entity.Comment;
 import ensharp.pinterest.domain.comment.repository.CommentRepository;
@@ -15,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -24,9 +25,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public void createComment(CreateCommentRequest request) {
+    public void createComment(UUID userId, CreateCommentRequest request) {
 
-        User user = userService.getUserById(request.userId());
+        User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(request.pinId());
 
         Comment comment = Comment.builder()
@@ -40,18 +41,26 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(DeleteCommentRequest request) {
-        Comment comment = commentRepository.findById(request.commentId())
+    public void deleteComment(UUID userId, UUID commentId) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
+
+        if(comment.getUser().getId()!=userId){
+            throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
+        }
 
         commentRepository.delete(comment);
     }
 
     @Transactional
-    public void updateComment(UpdateCommentRequest request) {
-        Comment comment = commentRepository.findById(request.commentId())
+    public void updateComment(UUID userId, UUID commentId, UpdateCommentRequest request) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
-        commentRepository.updateComment(request.commentId(), request.newContent());
+        if(comment.getUser().getId()!=userId){
+            throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
+        }
+
+        commentRepository.updateComment(commentId, request.newContent());
     }
 }

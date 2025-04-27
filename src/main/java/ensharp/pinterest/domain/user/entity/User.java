@@ -1,8 +1,11 @@
 package ensharp.pinterest.domain.user.entity;
 
+import ensharp.pinterest.domain.favorite.entity.Favorite;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -37,4 +40,8 @@ public class User {
     // 상세주소
     @Column(name = "detail_address", nullable = false)
     private String detailAddress;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Favorite> favorites = new ArrayList<>();
 }

@@ -11,14 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-// CSRF (Cross Site Request Forgery)
-// 사이트 간 요청 위조 공격을 방지하기 위해 Spring Security가 기본적으로 제공하는 보안 기능
-// 왜 비활성화 하는지는 그리고 정확히 뭔지는 추후에 공부
 
 @Configuration
 @EnableWebSecurity
@@ -57,12 +52,12 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/login", "/auth/signup", "/auth/email-check").permitAll() // 해당 API는 모든 접근 허용
+                        .requestMatchers("/auth/login", "/auth/signup", "/auth/email-check", "/email-verification/*").permitAll() // 해당 API는 모든 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
 
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) // Jwt 필터는 로그인필터 전에 붙여야함
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

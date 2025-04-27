@@ -1,13 +1,17 @@
 package ensharp.pinterest.domain.comment.api;
 
 import ensharp.pinterest.domain.comment.dto.request.CreateCommentRequest;
-import ensharp.pinterest.domain.comment.dto.request.DeleteCommentRequest;
 import ensharp.pinterest.domain.comment.dto.request.UpdateCommentRequest;
 import ensharp.pinterest.domain.comment.service.CommentService;
+import ensharp.pinterest.global.security.model.JwtUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/comment")
@@ -16,29 +20,29 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("")
-    public ResponseEntity<Void> createComment(CreateCommentRequest request) {
+    public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, CreateCommentRequest request) {
 
-        commentService.createComment(request);
+        commentService.createComment(userDetails.getId(), request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<Void> deleteComment(DeleteCommentRequest request) {
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID commentId) {
 
-        commentService.deleteComment(request);
+        commentService.deleteComment(userDetails.getId(), commentId);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
-    @PatchMapping("")
-    public ResponseEntity<Void> updateComment(UpdateCommentRequest request) {
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID commentId, @Valid @RequestBody UpdateCommentRequest request) {
 
-        commentService.updateComment(request);
+        commentService.updateComment(userDetails.getId(), commentId, request);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

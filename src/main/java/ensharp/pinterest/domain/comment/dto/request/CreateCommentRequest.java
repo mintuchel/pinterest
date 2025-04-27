@@ -1,9 +1,8 @@
 package ensharp.pinterest.domain.comment.dto.request;
 
-import lombok.Getter;
+import java.util.UUID;
 
 public record CreateCommentRequest(
-        String userId,
-        String pinId,
+        UUID pinId,
         String content
 ) { }

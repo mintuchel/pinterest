@@ -1,5 +1,7 @@
 package ensharp.pinterest.domain.pin.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,8 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @Getter
 public class CreatePinRequest {
-    private String userId;
+    @Schema(description = "핀 제목", example = "엔샵사진")
+    @NotBlank(message = "제목은 필수 입력 값입니다.")
     private String title;
+
+    @Schema(description = "핀 설명", example = "저번주 수요일날 찍은거")
     private String description;
 
     private MultipartFile image;

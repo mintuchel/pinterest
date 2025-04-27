@@ -2,8 +2,10 @@ package ensharp.pinterest.domain.pin.dto.response;
 
 import ensharp.pinterest.domain.pin.entity.Pin;
 
+import java.util.UUID;
+
 public record PinInfoResponse(
-        String pinId,
+        UUID pinId,
         String s3Url,
         String title,
         String description,
