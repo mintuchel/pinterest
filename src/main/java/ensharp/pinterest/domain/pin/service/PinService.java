@@ -2,6 +2,7 @@ package ensharp.pinterest.domain.pin.service;
 
 import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
+import ensharp.pinterest.domain.pin.dto.request.UpdatePinRequest;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
@@ -36,7 +37,7 @@ public class PinService {
      * query에 따른 List<PinThumbnail> 조회
      */
     @Transactional(readOnly = true)
-    public List<PinThumbnailResponse> getPinThumbnails(String query){
+    public List<PinThumbnailResponse> getPinsByQuery(String query){
 
         // 쿼리가 ""이면
         if(query.isBlank()){
@@ -101,7 +102,21 @@ public class PinService {
     }
 
     @Transactional
-    public void updatePin(UUID userId, UpdateP)
+    public void updatePin(UUID userId, UUID pinId, UpdatePinRequest updatePinRequest) {
+        // pinId로 삭제할 Pin 객체 조회
+        Pin targetPin = pinRepository.findById(pinId)
+                .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
+
+        // 해당 Pin 을 올린 유저가 아니라면
+        if(targetPin.getUser().getId().equals(userId)){
+            throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
+        }
+
+        String newTitle = updatePinRequest.getTitle().isBlank() ? targetPin.getTitle() : updatePinRequest.getTitle();
+        String newDescription = updatePinRequest.getDescription().isBlank() ? targetPin.getDescription() : updatePinRequest.getDescription();
+
+        pinRepository.updatePin(pinId, newTitle, newDescription);
+    }
 
     @Transactional(readOnly = true)
     public List<CommentInfoResponse> getCommentsByPinId(UUID pinId){

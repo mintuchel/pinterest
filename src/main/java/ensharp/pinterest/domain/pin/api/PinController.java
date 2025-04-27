@@ -31,10 +31,10 @@ public class PinController {
     // requestparam 없이 /api/v1/pin으로 보내도 정상적으로 동작
     @GetMapping("")
     @Operation(summary = "유저 쿼리에 기반한 Pin 썸네일 조회")
-    public ResponseEntity<List<PinThumbnailResponse>> getPinThumbnails(@RequestParam(defaultValue = "") String query){
+    public ResponseEntity<List<PinThumbnailResponse>> getPinsByQuery(@RequestParam(defaultValue = "") String query){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(pinService.getPinThumbnails(query));
+                .body(pinService.getPinsByQuery(query));
     }
 
     @GetMapping("/{pinId}")
@@ -65,8 +65,12 @@ public class PinController {
 
     @PatchMapping("/{pinId}")
     @Operation(summary = "Pin 업데이트")
-    public void updatePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId, @Valid @RequestBody UpdatePinRequest updatePinRequest) {
+    public ResponseEntity<Void> updatePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId, @Valid @RequestBody UpdatePinRequest updatePinRequest) {
+        pinService.updatePin(userDetails.getId(), pinId, updatePinRequest);
 
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @GetMapping("/{pinId}/comments")

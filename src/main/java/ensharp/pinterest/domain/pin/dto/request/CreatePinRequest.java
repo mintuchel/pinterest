@@ -18,5 +18,6 @@ public class CreatePinRequest {
     @Schema(description = "핀 설명", example = "저번주 수요일날 찍은거")
     private String description;
 
+    @Schema(description = "수정된 핀 사진", example = "엔샵단체사진.jpg")
     private MultipartFile image;
 }
