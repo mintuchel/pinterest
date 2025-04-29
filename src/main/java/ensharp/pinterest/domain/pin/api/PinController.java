@@ -39,7 +39,7 @@ public class PinController {
 
     @GetMapping("/{pinId}")
     @Operation(summary = "특정 Pin 정보 조회")
-    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable UUID pinId){
+    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(pinService.getPin(pinId));
@@ -55,7 +55,7 @@ public class PinController {
 
     @DeleteMapping("/{pinId}")
     @Operation(summary = "Pin 삭제")
-    public ResponseEntity<Void> deletePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId) {
+    public ResponseEntity<Void> deletePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String pinId) {
         pinService.deletePin(userDetails.getId(), pinId);
 
         return ResponseEntity
@@ -65,7 +65,7 @@ public class PinController {
 
     @PatchMapping("/{pinId}")
     @Operation(summary = "Pin 업데이트")
-    public ResponseEntity<Void> updatePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID pinId, @Valid @RequestBody UpdatePinRequest updatePinRequest) {
+    public ResponseEntity<Void> updatePin(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String pinId, @Valid @RequestBody UpdatePinRequest updatePinRequest) {
         pinService.updatePin(userDetails.getId(), pinId, updatePinRequest);
 
         return ResponseEntity
@@ -75,7 +75,7 @@ public class PinController {
 
     @GetMapping("/{pinId}/comments")
     @Operation(summary="특정 Pin 댓글 조회")
-    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable UUID pinId) {
+    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable String pinId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(pinService.getCommentsByPinId(pinId));

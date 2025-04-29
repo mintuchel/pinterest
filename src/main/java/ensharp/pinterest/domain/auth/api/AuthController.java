@@ -32,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
-    public ResponseEntity<UUID> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(authService.signUp(signUpRequest));

@@ -15,7 +15,7 @@ import java.util.UUID;
 // email 에 인덱싱 걸어놓으면 좋을듯?
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);

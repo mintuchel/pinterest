@@ -33,7 +33,7 @@ public class FavoriteController {
 
     @PostMapping("/{pinId}")
     @Operation(summary = "특정 유저의 관심핀 추가")
-    public ResponseEntity<Void> addFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetails, @PathVariable UUID pinId){
+    public ResponseEntity<Void> addFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetails, @PathVariable String pinId){
         favoriteService.createFavoritePin(jwtUserDetails.getId(), pinId);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -41,7 +41,7 @@ public class FavoriteController {
 
     @DeleteMapping("/{pinId}")
     @Operation(summary = "특정 유저의 관심핀 삭제")
-    public ResponseEntity<Void> deleteFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetail, @PathVariable UUID pinId){
+    public ResponseEntity<Void> deleteFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetail, @PathVariable String pinId){
         favoriteService.deleteFavoritePin(jwtUserDetail.getId(), pinId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

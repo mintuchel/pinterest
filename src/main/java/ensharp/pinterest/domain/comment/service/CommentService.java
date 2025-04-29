@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -25,7 +23,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public void createComment(UUID userId, CreateCommentRequest request) {
+    public void createComment(String userId, CreateCommentRequest request) {
 
         User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(request.pinId());
@@ -44,7 +42,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(UUID userId, UUID commentId) {
+    public void deleteComment(String userId, String commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
@@ -60,7 +58,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(UUID userId, UUID commentId, UpdateCommentRequest request) {
+    public void updateComment(String userId, String commentId, UpdateCommentRequest request) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 

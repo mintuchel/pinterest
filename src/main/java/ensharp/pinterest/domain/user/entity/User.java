@@ -3,6 +3,8 @@ package ensharp.pinterest.domain.user.entity;
 import ensharp.pinterest.domain.favorite.entity.Favorite;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,7 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id")
-    private UUID id;
+    private String id;
 
     // 이메일
     @Column(nullable = false, unique = true, length = 30)

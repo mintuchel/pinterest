@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/comments")
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class CommentController {
 
     @PostMapping("")
     @Operation(summary = "댓글 추가")
-    public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, CreateCommentRequest request) {
+    public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, @Valid @RequestBody CreateCommentRequest request) {
 
         commentService.createComment(userDetails.getId(), request);
 
@@ -35,7 +33,7 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     @Operation(summary = "댓글 삭제")
-    public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID commentId) {
+    public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String commentId) {
 
         commentService.deleteComment(userDetails.getId(), commentId);
 
@@ -46,7 +44,7 @@ public class CommentController {
 
     @PatchMapping("/{commentId}")
     @Operation(summary = "댓글 수정")
-    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable UUID commentId, @Valid @RequestBody UpdateCommentRequest request) {
+    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String commentId, @Valid @RequestBody UpdateCommentRequest request) {
 
         commentService.updateComment(userDetails.getId(), commentId, request);
 

@@ -3,10 +3,9 @@ package ensharp.pinterest.domain.comment.dto.response;
 import ensharp.pinterest.domain.comment.entity.Comment;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public record CommentInfoResponse(
-    UUID commentId,
+    String commentId,
     String authorName,
     String content,
     LocalDateTime updatedAt

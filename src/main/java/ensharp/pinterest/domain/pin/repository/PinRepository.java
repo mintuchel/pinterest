@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface PinRepository extends JpaRepository<Pin, UUID> {
+public interface PinRepository extends JpaRepository<Pin, String> {
     @Query(value = "SELECT * FROM pin WHERE title LIKE %:query% OR description LIKE %:query%", nativeQuery = true)
     List<Pin> findAllByQuery(@Param("query") String query);
 
     @Modifying
     @Query(value = "UPDATE pin SET title = :title, description = :description WHERE id = :pinId", nativeQuery = true)
-    void updatePin(@Param("pinId") UUID pinId, @Param("title") String title, @Param("description") String description);
+    void updatePin(@Param("pinId") String pinId, @Param("title") String title, @Param("description") String description);
 }

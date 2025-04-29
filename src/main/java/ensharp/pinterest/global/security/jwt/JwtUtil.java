@@ -4,7 +4,6 @@ import ensharp.pinterest.domain.user.entity.User;
 import ensharp.pinterest.domain.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * JWTUtil
@@ -25,17 +23,18 @@ public class JwtUtil {
 
     // 서버 내부 SecretKey
     private final SecretKey secretKey;
-
+    private final long accessTokenExpiredMs;
     private final UserRepository userRepository;
 
     // secret 을 해시알고리즘을 통해 변환하고 final key 로 설정해주기
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret, UserRepository userRepository) {
+    public JwtUtil(@Value("${spring.jwt.secret}") String secret, @Value("${spring.jwt.access-token-expired-ms}") long accessTokenExpiredMs, UserRepository userRepository) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.accessTokenExpiredMs = accessTokenExpiredMs;
         this.userRepository = userRepository;
     }
 
     // Jwt 생성
-    public String createJwt(String email, String username, Long expiredMs){
+    public String createJwt(String email, String username){
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -44,13 +43,13 @@ public class JwtUtil {
 
                 // Payload 에 원하는 Claim 정보 넣기
                 // claim 은 디코딩이 언제나 가능하기 때문에 민감한 정보를 넣으면 안됨!
+                .claim("id", user.getId())
                 .claim("email", email)
                 .claim("username", username)
-                .claim("id", user.getId())
 
                 // Payload 에 발행시간 및 만료시간 추가
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiredMs))
 
                 // 인코딩된 헤더와 클레임 부분을 SecretKey 와 서명 알고리즘을 이용해 서명을 생성하여 추가
                 .signWith(secretKey)
@@ -83,8 +82,8 @@ public class JwtUtil {
         return claims.get("username", String.class);
     }
 
-    public UUID getId(Claims claims){
-        return UUID.fromString(claims.get("id", String.class));
+    public String getId(Claims claims){
+        return claims.get("id", String.class);
     }
 
     // Claim 에서 만료기간 확인

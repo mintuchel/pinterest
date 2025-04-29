@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class FavoriteService {
     private final PinService pinService;
 
     @Transactional(readOnly = true)
-    public List<PinThumbnailResponse> getFavoritePins(UUID userId) {
+    public List<PinThumbnailResponse> getFavoritePins(String userId) {
         User user = userService.getUserById(userId);
 
         List<Favorite> favorites = user.getFavorites();
@@ -42,7 +41,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public void createFavoritePin(UUID userId, UUID pinId) {
+    public void createFavoritePin(String userId, String pinId) {
         User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(pinId);
 
@@ -56,7 +55,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public void deleteFavoritePin(UUID userId, UUID pinId) {
+    public void deleteFavoritePin(String userId, String pinId) {
         User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(pinId);
 

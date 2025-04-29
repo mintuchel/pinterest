@@ -22,7 +22,7 @@ public class JwtUserDetails implements UserDetails {
         this.user = user;
     }
 
-    public JwtUserDetails(UUID id, String email, String username){
+    public JwtUserDetails(String id, String email, String username){
         this.user = User.builder()
                 .id(id)
                 .email(email)
@@ -31,7 +31,7 @@ public class JwtUserDetails implements UserDetails {
                 .build();
     }
 
-    public UUID getId() {
+    public String getId() {
         return user.getId();
     }
 

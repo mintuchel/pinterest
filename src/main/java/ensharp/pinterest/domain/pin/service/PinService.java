@@ -28,7 +28,7 @@ public class PinService {
     private final PinRepository pinRepository;
 
     @Transactional(readOnly = true)
-    public Pin getPinById(UUID pinId){
+    public Pin getPinById(String pinId){
         return pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
@@ -54,14 +54,14 @@ public class PinService {
      * 특정 Pin 조회
      */
     @Transactional(readOnly = true)
-    public PinInfoResponse getPin(UUID pinId){
+    public PinInfoResponse getPin(String pinId){
         return pinRepository.findById(pinId)
                 .map(PinInfoResponse::from)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
 
     @Transactional
-    public String createPin(UUID userId, CreatePinRequest createPinRequest) {
+    public String createPin(String userId, CreatePinRequest createPinRequest) {
 
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
@@ -83,7 +83,7 @@ public class PinService {
     }
 
     @Transactional
-    public void deletePin(UUID userId, UUID pinId) {
+    public void deletePin(String userId, String pinId) {
 
         // pinId로 삭제할 Pin 객체 조회
         Pin targetPin = pinRepository.findById(pinId)
@@ -102,7 +102,7 @@ public class PinService {
     }
 
     @Transactional
-    public void updatePin(UUID userId, UUID pinId, UpdatePinRequest updatePinRequest) {
+    public void updatePin(String userId, String pinId, UpdatePinRequest updatePinRequest) {
         // pinId로 삭제할 Pin 객체 조회
         Pin targetPin = pinRepository.findById(pinId)
                 .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
@@ -119,7 +119,7 @@ public class PinService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentInfoResponse> getCommentsByPinId(UUID pinId){
+    public List<CommentInfoResponse> getCommentsByPinId(String pinId){
         Pin pin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
