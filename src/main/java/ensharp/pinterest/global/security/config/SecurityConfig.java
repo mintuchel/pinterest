@@ -53,7 +53,8 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/signup", "/auth/email-check", "/email-verification/*").permitAll() // 해당 API는 모든 접근 허용
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").permitAll() // admin 쪽 접근 허용
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 접근 허용
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
 

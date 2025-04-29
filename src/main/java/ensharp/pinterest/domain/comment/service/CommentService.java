@@ -37,6 +37,9 @@ public class CommentService {
                 .content(request.content())
                 .build();
 
+        // 연관관계 편의 메서드
+        pin.addComment(comment);
+
         commentRepository.save(comment);
     }
 
@@ -49,6 +52,10 @@ public class CommentService {
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
 
+        // 연관관계 편의 메서드
+        Pin pin = comment.getPin();
+        pin.removeComment(comment);
+
         commentRepository.delete(comment);
     }
 
@@ -60,6 +67,10 @@ public class CommentService {
         if(comment.getUser().getId()!=userId){
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
+
+        // 연관관계 편의 메서드
+        Pin pin = comment.getPin();
+        pin.updateComment(comment);
 
         commentRepository.updateComment(commentId, request.newContent());
     }

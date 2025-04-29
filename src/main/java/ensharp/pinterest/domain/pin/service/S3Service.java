@@ -67,10 +67,6 @@ public class S3Service {
         return true;
     }
 
-    public boolean updateImageFromS3(String s3Key, MultipartFile file) {
-        return true;
-    }
-
     // S3에 저장 후 해당 URL 을 들어가면 이미지가 나옴
     // URL 을 데이터베이스에 저장하고 클라이언트에게 넘겨줄 생각이라 URL 형식으로 변환해주는 메서드를 추가적으로 작성
     // S3 객체의 URL 은 https://%s.s3.%s.amazonaws.com/%s과 같은 형식으로 저장됨

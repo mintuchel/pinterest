@@ -4,6 +4,8 @@ import ensharp.pinterest.domain.favorite.service.FavoriteService;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,14 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/favorites")
+@RequestMapping("/favorites")
+@Tag(name = "Favorite API", description = "관심핀 관련")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
     @GetMapping
+    @Operation(summary = "특정 유저의 관심핀 조회")
     public ResponseEntity<List<PinThumbnailResponse>> getFavoritePins(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -28,6 +32,7 @@ public class FavoriteController {
     }
 
     @PostMapping("/{pinId}")
+    @Operation(summary = "특정 유저의 관심핀 추가")
     public ResponseEntity<Void> addFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetails, @PathVariable UUID pinId){
         favoriteService.createFavoritePin(jwtUserDetails.getId(), pinId);
 
@@ -35,6 +40,7 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/{pinId}")
+    @Operation(summary = "특정 유저의 관심핀 삭제")
     public ResponseEntity<Void> deleteFavoritePin(@AuthenticationPrincipal JwtUserDetails jwtUserDetail, @PathVariable UUID pinId){
         favoriteService.deleteFavoritePin(jwtUserDetail.getId(), pinId);
 

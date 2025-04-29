@@ -21,8 +21,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/pin")
-@Tag(name = "핀 API", description = "핀 업로드/수정/삭제")
+@RequestMapping("/pins")
+@Tag(name = "Pin API", description = "Pin 조회 및 CRUD 관련")
 public class PinController {
 
     private final PinService pinService;

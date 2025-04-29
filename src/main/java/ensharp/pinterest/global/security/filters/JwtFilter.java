@@ -2,6 +2,7 @@ package ensharp.pinterest.global.security.filters;
 
 import ensharp.pinterest.global.security.jwt.JwtUtil;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
+import ensharp.pinterest.global.security.service.JwtUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

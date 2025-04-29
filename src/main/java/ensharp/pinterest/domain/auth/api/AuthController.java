@@ -5,6 +5,7 @@ import ensharp.pinterest.domain.auth.dto.CheckEmailRequest;
 import ensharp.pinterest.domain.auth.service.AuthService;
 import ensharp.pinterest.domain.auth.dto.SignUpRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth API", description = "회원가입 및 인증/인가 관련")
 public class AuthController {
 
     private final AuthService authService;

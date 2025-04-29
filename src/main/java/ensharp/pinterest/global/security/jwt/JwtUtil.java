@@ -1,7 +1,10 @@
 package ensharp.pinterest.global.security.jwt;
 
+import ensharp.pinterest.domain.user.entity.User;
+import ensharp.pinterest.domain.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +26,14 @@ public class JwtUtil {
     private final SecretKey secretKey;
 
     // secret 을 해시알고리즘을 통해 변환하고 final key 로 설정해주기
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret){
+    public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
+
     // Jwt 생성
     public String createJwt(String email, String username, Long expiredMs){
+
         return Jwts.builder()
 
                 // Payload 에 원하는 Claim 정보 넣기
