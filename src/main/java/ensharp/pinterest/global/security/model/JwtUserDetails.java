@@ -22,8 +22,9 @@ public class JwtUserDetails implements UserDetails {
         this.user = user;
     }
 
-    public JwtUserDetails(String email, String username){
+    public JwtUserDetails(UUID id, String email, String username){
         this.user = User.builder()
+                .id(id)
                 .email(email)
                 .password("1234")
                 .username(username)

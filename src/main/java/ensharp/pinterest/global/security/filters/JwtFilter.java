@@ -58,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
             System.out.println("token is not expired!");
         }
 
-        JwtUserDetails jwtUserDetails = new JwtUserDetails(jwtUtil.getEmail(claims), jwtUtil.getUsername(claims));
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(jwtUtil.getId(claims), jwtUtil.getEmail(claims), jwtUtil.getUsername(claims));
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(jwtUserDetails, null, jwtUserDetails.getAuthorities());
 

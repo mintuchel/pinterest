@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * JWTUtil
@@ -25,14 +26,19 @@ public class JwtUtil {
     // 서버 내부 SecretKey
     private final SecretKey secretKey;
 
-    // secret 을 해시알고리즘을 통해 변환하고 final key 로 설정해주기
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-    }
+    private final UserRepository userRepository;
 
+    // secret 을 해시알고리즘을 통해 변환하고 final key 로 설정해주기
+    public JwtUtil(@Value("${spring.jwt.secret}") String secret, UserRepository userRepository) {
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.userRepository = userRepository;
+    }
 
     // Jwt 생성
     public String createJwt(String email, String username, Long expiredMs){
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         return Jwts.builder()
 
@@ -40,6 +46,7 @@ public class JwtUtil {
                 // claim 은 디코딩이 언제나 가능하기 때문에 민감한 정보를 넣으면 안됨!
                 .claim("email", email)
                 .claim("username", username)
+                .claim("id", user.getId())
 
                 // Payload 에 발행시간 및 만료시간 추가
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -76,8 +83,8 @@ public class JwtUtil {
         return claims.get("username", String.class);
     }
 
-    public String getRole(Claims claims){
-        return claims.get("role", String.class);
+    public UUID getId(Claims claims){
+        return UUID.fromString(claims.get("id", String.class));
     }
 
     // Claim 에서 만료기간 확인
