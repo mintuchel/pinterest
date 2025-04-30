@@ -4,12 +4,16 @@ import ensharp.pinterest.domain.auth.dto.ChangePasswordRequest;
 import ensharp.pinterest.domain.auth.dto.CheckEmailRequest;
 import ensharp.pinterest.domain.auth.service.AuthService;
 import ensharp.pinterest.domain.auth.dto.SignUpRequest;
+import ensharp.pinterest.domain.user.dto.response.UserInfoResponse;
+import ensharp.pinterest.domain.user.service.UserService;
+import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,6 +25,14 @@ import java.util.UUID;
 public class AuthController {
 
     private final AuthService authService;
+
+    @GetMapping("/me")
+    @Operation(summary = "개인정보 확인")
+    public ResponseEntity<UserInfoResponse> getMyInfo(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authService.getUserInfo(userDetails.getId()));
+    }
 
     @PostMapping("/email-check")
     @Operation(summary = "이메일 중복 확인")

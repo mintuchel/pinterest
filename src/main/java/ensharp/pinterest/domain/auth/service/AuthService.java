@@ -3,6 +3,7 @@ package ensharp.pinterest.domain.auth.service;
 import ensharp.pinterest.domain.auth.dto.ChangePasswordRequest;
 import ensharp.pinterest.domain.auth.dto.CheckEmailRequest;
 import ensharp.pinterest.domain.auth.dto.SignUpRequest;
+import ensharp.pinterest.domain.user.dto.response.UserInfoResponse;
 import ensharp.pinterest.domain.user.entity.User;
 import ensharp.pinterest.domain.user.repository.UserRepository;
 import ensharp.pinterest.global.exception.errorcode.UserErrorCode;
@@ -12,14 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
+
+    @Transactional(readOnly = true)
+    public UserInfoResponse getUserInfo(String userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+
+        return UserInfoResponse.from(user);
+    }
 
     @Transactional(readOnly = true)
     public String checkIfEmailAvailable(CheckEmailRequest checkEmailRequest){

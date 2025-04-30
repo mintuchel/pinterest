@@ -23,13 +23,4 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(()-> new UserException(UserErrorCode.USER_NOT_FOUND));
     }
-
-    @Transactional(readOnly = true)
-    public UserInfoResponse getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                // 해당 이메일(유저)이 존재하지 않는다면
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
-
-        return UserInfoResponse.from(user);
-    }
 }

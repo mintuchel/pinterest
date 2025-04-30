@@ -20,14 +20,6 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/users/{email}")
-    @Operation(summary = "특정 유저 조회")
-    public ResponseEntity<UserInfoResponse> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(adminService.getUserByEmail(email));
-    }
-
     @GetMapping("/users")
     @Operation(summary = "모든 유저 조회")
     public ResponseEntity<List<UserInfoResponse>> getAllUsers() {
@@ -36,8 +28,16 @@ public class AdminController {
                 .body(adminService.getAllUsers());
     }
 
+    @GetMapping("/users/{email}")
+    @Operation(summary = "특정 유저 조회")
+    public ResponseEntity<UserInfoResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(adminService.getUserByEmail(email));
+    }
+
     @DeleteMapping("/users/{email}")
-    @Operation(summary = "유저 삭제")
+    @Operation(summary = "특정 유저 삭제")
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
         adminService.deleteUserByEmail(email);
 
