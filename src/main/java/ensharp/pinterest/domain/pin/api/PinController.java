@@ -17,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,20 +36,20 @@ public class PinController {
                 .body(pinService.getPinsByQuery(query));
     }
 
+    @PostMapping("")
+    @Operation(summary = "Pin 업로드")
+    public ResponseEntity<String> createPin(@AuthenticationPrincipal JwtUserDetails userDetails, @ModelAttribute CreatePinRequest createPinRequest){
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(pinService.createPin(userDetails.getId(), createPinRequest));
+    }
+
     @GetMapping("/{pinId}")
     @Operation(summary = "특정 Pin 정보 조회")
     public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(pinService.getPin(pinId));
-    }
-
-    @PostMapping("/upload")
-    @Operation(summary = "Pin 업로드")
-    public ResponseEntity<String> createPin(@AuthenticationPrincipal JwtUserDetails userDetails, @ModelAttribute CreatePinRequest createPinRequest){
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(pinService.createPin(userDetails.getId(), createPinRequest));
     }
 
     @DeleteMapping("/{pinId}")

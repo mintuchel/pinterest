@@ -3,7 +3,7 @@ package ensharp.pinterest.domain.pin.service;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
-import ensharp.pinterest.global.config.S3Config;
+import ensharp.pinterest.global.config.AwsS3Config;
 import ensharp.pinterest.global.exception.errorcode.PinErrorCode;
 import ensharp.pinterest.global.exception.exception.PinException;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final S3Config s3Config;
+    private final AwsS3Config awsS3Config;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
     public S3ObjectInfo getImageInfoFromS3(String s3Key){
-        boolean doesObjectExist = s3Config.amazonS3().doesObjectExist(bucket, s3Key);
+        boolean doesObjectExist = awsS3Config.awsS3Client().doesObjectExist(bucket, s3Key);
 
         if(!doesObjectExist){
             throw new PinException(PinErrorCode.PIN_NOT_FOUND);
@@ -34,6 +34,12 @@ public class S3Service {
     }
 
     public S3ObjectInfo uploadImageToS3(MultipartFile file) {
+
+        // file 이 없을때
+        if(file.isEmpty()) {
+            throw new PinException(PinErrorCode.IMAGE_NOT_SENT);
+        }
+
         // 파일에 대한 S3 Key 값인 UUID 생성
         String originalFilename = file.getOriginalFilename(); // 김고은.jpeg
         String s3Key = UUID.randomUUID().toString() + "-" + originalFilename;
@@ -49,7 +55,7 @@ public class S3Service {
             // S3에 저장할 객체 생성
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, s3Key, file.getInputStream(), metadata);
             // S3에 파일 업로드
-            s3Config.amazonS3().putObject(putObjectRequest);
+            awsS3Config.awsS3Client().putObject(putObjectRequest);
         }catch(IOException e) {
 
         }
@@ -58,9 +64,9 @@ public class S3Service {
     }
 
     public boolean deleteImageFromS3(String s3Key) {
-        boolean doesObjectExist = s3Config.amazonS3().doesObjectExist(bucket, s3Key);
+        boolean doesObjectExist = awsS3Config.awsS3Client().doesObjectExist(bucket, s3Key);
         if (doesObjectExist) {
-            s3Config.amazonS3().deleteObject(bucket, s3Key);
+            awsS3Config.awsS3Client().deleteObject(bucket, s3Key);
         } else {
             throw new PinException(PinErrorCode.PIN_NOT_FOUND);
         }
@@ -72,6 +78,6 @@ public class S3Service {
     // S3 객체의 URL 은 https://%s.s3.%s.amazonaws.com/%s과 같은 형식으로 저장됨
     // S3에 업로드된 파일을 인터넷에서 접근할 수 있는 주소(URL) = https://{버킷이름}.s3.{리전}.amazonaws.com/{S3 Key}
     private String getPublicUrl(String fileName){
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, s3Config.amazonS3().getRegionName(),fileName);
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, awsS3Config.awsS3Client().getRegionName(),fileName);
     }
 }

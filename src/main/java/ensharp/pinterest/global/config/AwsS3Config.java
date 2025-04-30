@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 // S3Client 의 설정정보를 입력해서 빈으로 등록
 
 @Configuration
-public class S3Config {
+public class AwsS3Config {
 
     @Value("${spring.cloud.aws.credentials.access-key}")
     private String accessKey;
@@ -23,7 +23,7 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3 amazonS3(){
+    public AmazonS3 awsS3Client(){
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         return AmazonS3ClientBuilder.standard()
                 .withRegion(region)

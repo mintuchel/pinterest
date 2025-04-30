@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -63,9 +62,9 @@ public class PinService {
     @Transactional
     public String createPin(String userId, CreatePinRequest createPinRequest) {
 
-        S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
-
         User user = userService.getUserById(userId);
+
+        S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
         Pin pin = Pin.builder()
                 .title(createPinRequest.getTitle())

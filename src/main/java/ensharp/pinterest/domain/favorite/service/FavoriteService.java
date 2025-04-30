@@ -2,7 +2,6 @@ package ensharp.pinterest.domain.favorite.service;
 
 import ensharp.pinterest.domain.favorite.entity.Favorite;
 import ensharp.pinterest.domain.favorite.repository.FavoriteRepository;
-import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.entity.Pin;
 import ensharp.pinterest.domain.pin.service.PinService;
