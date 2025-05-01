@@ -34,6 +34,10 @@ dependencies {
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	/**
+	 * spring swagger 의존 -> 자동설정기반이라 별도의 설정클래스 없이도 api 페이지를 띄워줌
+	 * authorization header 등 커스터마이징을 하려면 별도의 swagger config 클래스를 만들어주어야함
+	 */
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
