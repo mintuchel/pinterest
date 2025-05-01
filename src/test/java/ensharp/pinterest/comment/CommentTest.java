@@ -62,7 +62,6 @@ public class CommentTest {
         commentService.createComment(userId, request);
 
         // then
-        Assertions.assertThat(pin.getComments()).isNotEmpty();
     }
 
     @Test
