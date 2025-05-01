@@ -1,10 +1,10 @@
 package ensharp.pinterest.domain.pin.api;
 
-import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
 import ensharp.pinterest.domain.pin.dto.request.UpdatePinRequest;
 import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
+import ensharp.pinterest.domain.pin.entity.Pin;
 import ensharp.pinterest.domain.pin.service.PinService;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,8 +26,7 @@ public class PinController {
 
     private final PinService pinService;
 
-    // ?query="" 이런 형식으로 처리됨
-    // requestparam 없이 /api/v1/pin으로 보내도 정상적으로 동작
+    // 요청 파라미터 없이 /api/v1/pins 로 보내도 정상적으로 동작
     @GetMapping("")
     @Operation(summary = "유저 쿼리에 기반한 Pin 썸네일 조회")
     public ResponseEntity<List<PinThumbnailResponse>> getPinsByQuery(@RequestParam(defaultValue = "") String query){
@@ -36,20 +35,23 @@ public class PinController {
                 .body(pinService.getPinsByQuery(query));
     }
 
+    @GetMapping("/{pinId}")
+    @Operation(summary = "특정 Pin 정보 조회")
+    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
+
+        Pin pin = pinService.getPinById(pinId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(PinInfoResponse.from(pin));
+    }
+
     @PostMapping("")
     @Operation(summary = "Pin 업로드")
     public ResponseEntity<String> createPin(@AuthenticationPrincipal JwtUserDetails userDetails, @ModelAttribute CreatePinRequest createPinRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(pinService.createPin(userDetails.getId(), createPinRequest));
-    }
-
-    @GetMapping("/{pinId}")
-    @Operation(summary = "특정 Pin 정보 조회")
-    public ResponseEntity<PinInfoResponse> getPinInfo(@PathVariable String pinId){
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(pinService.getPin(pinId));
     }
 
     @DeleteMapping("/{pinId}")
@@ -70,13 +72,5 @@ public class PinController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
-    }
-
-    @GetMapping("/{pinId}/comments")
-    @Operation(summary="특정 Pin 댓글 조회")
-    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable String pinId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(pinService.getCommentsByPinId(pinId));
     }
 }

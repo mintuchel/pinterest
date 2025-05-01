@@ -5,7 +5,6 @@ import ensharp.pinterest.domain.auth.dto.CheckEmailRequest;
 import ensharp.pinterest.domain.auth.service.AuthService;
 import ensharp.pinterest.domain.auth.dto.SignUpRequest;
 import ensharp.pinterest.domain.user.dto.response.UserInfoResponse;
-import ensharp.pinterest.domain.user.service.UserService;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")

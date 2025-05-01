@@ -6,7 +6,10 @@ import ensharp.pinterest.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
+/**
+ * 연관관계에 있는 User 와 Pin 에 지연로딩 적용
+ * Comment 를 조회했을때는 프록시 객체로 조회되지만 연관객체 참조 시 추가 쿼리 나감 1+N -> 나중에 해결해보기
+ */
 
 @Entity
 @Getter

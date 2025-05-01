@@ -2,6 +2,7 @@ package ensharp.pinterest.domain.comment.service;
 
 import ensharp.pinterest.domain.comment.dto.request.CreateCommentRequest;
 import ensharp.pinterest.domain.comment.dto.request.UpdateCommentRequest;
+import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.comment.entity.Comment;
 import ensharp.pinterest.domain.comment.repository.CommentRepository;
 import ensharp.pinterest.domain.pin.entity.Pin;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -21,6 +24,16 @@ public class CommentService {
     private final PinService pinService;
 
     private final CommentRepository commentRepository;
+
+    @Transactional(readOnly = true)
+    public List<CommentInfoResponse> getCommentsByPin(String pinId){
+        Pin pin = pinService.getPinById(pinId);
+
+        return commentRepository.findByPinOrderByCreatedAt(pin)
+                .stream()
+                .map(CommentInfoResponse::from)
+                .toList();
+    }
 
     @Transactional
     public void createComment(String userId, CreateCommentRequest request) {
@@ -35,9 +48,6 @@ public class CommentService {
                 .content(request.content())
                 .build();
 
-        // 연관관계 편의 메서드
-        pin.addComment(comment);
-
         commentRepository.save(comment);
     }
 
@@ -50,10 +60,6 @@ public class CommentService {
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
 
-        // 연관관계 편의 메서드
-        Pin pin = comment.getPin();
-        pin.removeComment(comment);
-
         commentRepository.delete(comment);
     }
 
@@ -65,10 +71,6 @@ public class CommentService {
         if(comment.getUser().getId()!=userId){
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
-
-        // 연관관계 편의 메서드
-        Pin pin = comment.getPin();
-        pin.updateComment(comment);
 
         commentRepository.updateComment(commentId, request.newContent());
     }

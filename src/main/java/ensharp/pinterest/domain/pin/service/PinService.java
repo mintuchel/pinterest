@@ -26,6 +26,9 @@ public class PinService {
 
     private final PinRepository pinRepository;
 
+    /**
+     * 특정 Pin 조회
+     */
     @Transactional(readOnly = true)
     public Pin getPinById(String pinId){
         return pinRepository.findById(pinId)
@@ -47,16 +50,6 @@ public class PinService {
         // 아니면 해당 쿼리가 제목이나 설명에 포함된 Pin 들만 반환함
         return pinRepository.findAllByQuery(query).stream()
                 .map(PinThumbnailResponse::from).toList();
-    }
-
-    /**
-     * 특정 Pin 조회
-     */
-    @Transactional(readOnly = true)
-    public PinInfoResponse getPin(String pinId){
-        return pinRepository.findById(pinId)
-                .map(PinInfoResponse::from)
-                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
     }
 
     @Transactional
@@ -115,16 +108,5 @@ public class PinService {
         String newDescription = updatePinRequest.getDescription().isBlank() ? targetPin.getDescription() : updatePinRequest.getDescription();
 
         pinRepository.updatePin(pinId, newTitle, newDescription);
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommentInfoResponse> getCommentsByPinId(String pinId){
-        Pin pin = pinRepository.findById(pinId)
-                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
-
-        return pin.getComments()
-                .stream()
-                .map(CommentInfoResponse::from)
-                .toList();
     }
 }

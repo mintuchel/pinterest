@@ -8,7 +8,6 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -41,23 +40,23 @@ public class Pin extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    // Pin 과 Comment 는 일대다 관계
-    // Comment 가 @JoinColumn 정의로 주인
-    // cascade 와 orphanRemoval 옵션은 One 쪽에 주는게 맞음
-    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Comment> comments = new ArrayList<>();
 
-    public void addComment(Comment comment) {
-        comments.add(comment);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
-    }
-
-    public void updateComment(Comment comment) {
-        removeComment(comment);
-        addComment(comment);
-    }
+    // 양방향 했을때에서 단방향으로 바꿈
+    // 일대다 단방향에서 일쪽을 주인으로 두는게 이 관계에서는 훨씬 편할거 같은데..
+//    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    public void addComment(Comment comment) {
+//        comments.add(comment);
+//    }
+//
+//    public void removeComment(Comment comment) {
+//        comments.remove(comment);
+//    }
+//
+//    public void updateComment(Comment comment) {
+//        removeComment(comment);
+//        addComment(comment);
+//    }
 }

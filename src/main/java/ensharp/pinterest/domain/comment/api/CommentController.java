@@ -2,6 +2,7 @@ package ensharp.pinterest.domain.comment.api;
 
 import ensharp.pinterest.domain.comment.dto.request.CreateCommentRequest;
 import ensharp.pinterest.domain.comment.dto.request.UpdateCommentRequest;
+import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.comment.service.CommentService;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,16 +14,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/pins")
 @RequiredArgsConstructor
 @Tag(name = "Comment API", description = "Pin 댓글 관련")
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("")
-    @Operation(summary = "댓글 추가")
-    public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, @Valid @RequestBody CreateCommentRequest request) {
+    @GetMapping("/{pinId}/comments")
+    @Operation(summary = "특정 핀의 댓글 조회")
+    public ResponseEntity<List<CommentInfoResponse>> getCommentsByPinId(@PathVariable String pinId){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentService.getCommentsByPin(pinId));
+    }
+
+    @PostMapping("/{pinId}/comments")
+    @Operation(summary = "특정 핀의 댓글 추가")
+    public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String pinId, @Valid @RequestBody CreateCommentRequest request) {
 
         commentService.createComment(userDetails.getId(), request);
 
@@ -31,8 +42,8 @@ public class CommentController {
                 .build();
     }
 
-    @DeleteMapping("/{commentId}")
-    @Operation(summary = "댓글 삭제")
+    @DeleteMapping("/comments/{commentId}")
+    @Operation(summary = "특정 댓글 삭제")
     public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String commentId) {
 
         commentService.deleteComment(userDetails.getId(), commentId);
@@ -42,8 +53,8 @@ public class CommentController {
                 .build();
     }
 
-    @PatchMapping("/{commentId}")
-    @Operation(summary = "댓글 수정")
+    @PatchMapping("/comments/{commentId}")
+    @Operation(summary = "특정 댓글 수정")
     public ResponseEntity<Void> updateComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String commentId, @Valid @RequestBody UpdateCommentRequest request) {
 
         commentService.updateComment(userDetails.getId(), commentId, request);
