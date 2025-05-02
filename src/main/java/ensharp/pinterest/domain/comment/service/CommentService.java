@@ -56,7 +56,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
-        if(comment.getUser().getId()!=userId){
+        if(!comment.getUser().getId().equals(userId)){
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
 
@@ -68,7 +68,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
-        if(comment.getUser().getId()!=userId){
+        if(!comment.getUser().getId().equals(userId)){
             throw new CommentException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
 

@@ -27,7 +27,7 @@ public class JwtUtil {
     private final UserRepository userRepository;
 
     // secret 을 해시알고리즘을 통해 변환하고 final key 로 설정해주기
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret, @Value("${spring.jwt.access-token-expired-ms}") long accessTokenExpiredMs, UserRepository userRepository) {
+    public JwtUtil(@Value("${JWT_SECRET}") String secret, @Value("${spring.jwt.access-token-expired-ms}") long accessTokenExpiredMs, UserRepository userRepository) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.accessTokenExpiredMs = accessTokenExpiredMs;
         this.userRepository = userRepository;
