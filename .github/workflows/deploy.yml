@@ -33,7 +33,9 @@ jobs:
             
             git pull origin master
             
-            echo "${{ secrets.ENV_FILE }}" > .env
+            cat <<EOF > .env
+            ${{ secrets.ENV_FILE }}
+            EOF
             
             chmod +x ./gradlew
             ./gradlew clean build
