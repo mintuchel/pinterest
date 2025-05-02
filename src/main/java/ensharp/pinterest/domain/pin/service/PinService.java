@@ -1,9 +1,7 @@
 package ensharp.pinterest.domain.pin.service;
 
-import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.pin.dto.request.CreatePinRequest;
 import ensharp.pinterest.domain.pin.dto.request.UpdatePinRequest;
-import ensharp.pinterest.domain.pin.dto.response.PinInfoResponse;
 import ensharp.pinterest.domain.pin.dto.response.PinThumbnailResponse;
 import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
 import ensharp.pinterest.domain.pin.entity.Pin;
