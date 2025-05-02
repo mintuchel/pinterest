@@ -2,6 +2,7 @@ package ensharp.pinterest.domain.pin.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ public class CreatePinRequest {
     @Schema(description = "핀 설명", example = "저번주 수요일날 찍은거")
     private String description;
 
-    @Schema(description = "수정된 핀 사진", example = "엔샵단체사진.jpg")
+    @Schema(description = "업로드할 이미지 파일", format = "binary")
+    @NotNull(message = "이미지 파일은 필수입니다.")
     private MultipartFile image;
 }
