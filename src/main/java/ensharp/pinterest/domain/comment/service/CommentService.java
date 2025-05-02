@@ -36,10 +36,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void createComment(String userId, CreateCommentRequest request) {
+    public void createComment(String userId, String pinId, CreateCommentRequest request) {
 
         User user = userService.getUserById(userId);
-        Pin pin = pinService.getPinById(request.pinId());
+        Pin pin = pinService.getPinById(pinId);
 
         Comment comment = Comment.builder()
                 .user(user)

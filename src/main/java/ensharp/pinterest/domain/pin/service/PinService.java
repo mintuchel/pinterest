@@ -82,7 +82,7 @@ public class PinService {
                 .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
         // 해당 Pin 을 올린 유저가 아니라면
-        if(targetPin.getUser().getId().equals(userId)){
+        if(!targetPin.getUser().getId().equals(userId)){
             throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
         }
 
@@ -100,7 +100,7 @@ public class PinService {
                 .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
         // 해당 Pin 을 올린 유저가 아니라면
-        if(targetPin.getUser().getId().equals(userId)){
+        if(!targetPin.getUser().getId().equals(userId)){
             throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
         }
 

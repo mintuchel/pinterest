@@ -53,13 +53,12 @@ public class CommentTest {
         String pinId = faker.internet().uuid();
 
         given(user.getUsername()).willReturn(faker.internet().username());
-        given(request.pinId()).willReturn(pinId);
         given(request.content()).willReturn("content");
         given(userService.getUserById(userId)).willReturn(user);
         given(pinService.getPinById(pinId)).willReturn(pin);
 
         // when
-        commentService.createComment(userId, request);
+        commentService.createComment(userId, pinId, request);
 
         // then
     }

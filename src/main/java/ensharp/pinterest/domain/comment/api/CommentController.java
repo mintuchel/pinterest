@@ -38,7 +38,7 @@ public class CommentController {
     // @CommonErrorResponses
     public ResponseEntity<Void> createComment(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable String pinId, @Valid @RequestBody CreateCommentRequest request) {
 
-        commentService.createComment(userDetails.getId(), request);
+        commentService.createComment(userDetails.getId(), pinId, request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
