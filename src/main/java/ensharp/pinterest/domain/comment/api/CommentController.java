@@ -4,7 +4,6 @@ import ensharp.pinterest.domain.comment.dto.request.CreateCommentRequest;
 import ensharp.pinterest.domain.comment.dto.request.UpdateCommentRequest;
 import ensharp.pinterest.domain.comment.dto.response.CommentInfoResponse;
 import ensharp.pinterest.domain.comment.service.CommentService;
-import ensharp.pinterest.global.exception.handler.CommonErrorResponses;
 import ensharp.pinterest.global.security.model.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

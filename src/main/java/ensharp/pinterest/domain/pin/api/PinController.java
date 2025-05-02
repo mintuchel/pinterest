@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pins")
-@Tag(name = "Pin API", description = "Pin 조회 및 CRUD 관련")
+@Tag(name = "Pin API", description = "Pin CRUD 관련")
 public class PinController {
 
     private final PinService pinService;
