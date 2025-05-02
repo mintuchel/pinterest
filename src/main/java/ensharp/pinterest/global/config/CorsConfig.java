@@ -8,6 +8,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
 
+/**
+ * singletonList 는 불변리스트이고, 크기가 1일때 사용. List.of() 보다 성능상 약간 가볍다
+ */
 @Configuration
 public class CorsConfig {
     @Bean

@@ -77,7 +77,7 @@ public class PinService {
 
         // pinId로 삭제할 Pin 객체 조회
         Pin targetPin = pinRepository.findById(pinId)
-                .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
+                .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
         // 해당 Pin 을 올린 유저가 아니라면
         if(!targetPin.getUser().getId().equals(userId)){
@@ -93,7 +93,7 @@ public class PinService {
 
     @Transactional
     public void updatePin(String userId, String pinId, UpdatePinRequest updatePinRequest) {
-        // pinId로 삭제할 Pin 객체 조회
+        // pinId로 업데이트할 Pin 객체 조회
         Pin targetPin = pinRepository.findById(pinId)
                 .orElseThrow(()-> new PinException(PinErrorCode.PIN_NOT_FOUND));
 

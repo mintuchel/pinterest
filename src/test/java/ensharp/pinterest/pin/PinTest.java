@@ -14,8 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -25,7 +26,7 @@ public class PinTest {
     @InjectMocks
     private PinService pinService;
 
-    @Spy
+    @Mock
     private S3Service s3Service;
 
     @Mock
@@ -64,5 +65,24 @@ public class PinTest {
         verify(pinRepository).save(pin);
         Assertions.assertThat(pin.getS3Url()).isEqualTo(s3Url);
         Assertions.assertThat(pin.getS3Key()).isNotBlank();
+    }
+
+    @Test
+    @DisplayName("Pin 삭제 성공")
+    public void DeletePinSuccess(){
+        // given
+        String userId = faker.internet().uuid();
+        String pinId = faker.internet().uuid();
+
+        given(user.getId()).willReturn(userId);
+        given(pin.getUser()).willReturn(user);
+
+        given(pinRepository.findById(pinId)).willReturn(Optional.of(pin));
+
+        // when
+        pinService.deletePin(userId, pinId);
+
+        // then
+        verify(pinRepository).delete(pin);
     }
 }
