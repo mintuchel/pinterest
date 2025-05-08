@@ -1,13 +1,9 @@
 package ensharp.pinterest.domain.pin.entity;
 
-import ensharp.pinterest.domain.comment.entity.Comment;
 import ensharp.pinterest.domain.common.BaseEntity;
 import ensharp.pinterest.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +16,7 @@ public class Pin extends BaseEntity {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", nullable=false)
     private User user;
 
     @Column(nullable = false)
@@ -39,24 +35,4 @@ public class Pin extends BaseEntity {
 
     @Column(nullable = false)
     private String description;
-
-
-    // 양방향 했을때에서 단방향으로 바꿈
-    // 일대다 단방향에서 일쪽을 주인으로 두는게 이 관계에서는 훨씬 편할거 같은데..
-//    @OneToMany(mappedBy = "pin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    public void addComment(Comment comment) {
-//        comments.add(comment);
-//    }
-//
-//    public void removeComment(Comment comment) {
-//        comments.remove(comment);
-//    }
-//
-//    public void updateComment(Comment comment) {
-//        removeComment(comment);
-//        addComment(comment);
-//    }
 }

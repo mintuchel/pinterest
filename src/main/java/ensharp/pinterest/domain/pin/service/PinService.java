@@ -79,8 +79,12 @@ public class PinService {
         Pin targetPin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
+        System.out.println("targetPin userID : " + targetPin.getUser().getId());
+        System.out.println("parameter userID : " + userId);
+
         // 해당 Pin 을 올린 유저가 아니라면
         if(!targetPin.getUser().getId().equals(userId)){
+            System.out.println("해당 PIN을 올린 유저가 아닙니다!");
             throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
         }
 
