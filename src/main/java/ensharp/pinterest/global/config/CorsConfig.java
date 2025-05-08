@@ -17,8 +17,10 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+        // https 도 추가할까??
+        configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:*"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
+        // Authorization Content-Type Origin 등을 명시하는 것
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
