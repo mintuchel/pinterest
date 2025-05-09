@@ -18,7 +18,11 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByUsername(String username);
+
     Boolean existsByEmail(String email);
+
+    Boolean existsByUsername(String username);
 
     // 여기에도 Transactional이 사용되어야하는 것인지??
     @Modifying // 데이터를 변경하는 JPQL/Native Query를 수행

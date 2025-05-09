@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable())
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/signup", "/auth/email-check", "/email-verification/*").permitAll() // 로그인 회원가입 쪽 접근 허용
+                        .requestMatchers("/users/**").permitAll() // 유저 정보 쪽 접근 다 뚫어주기
                         .requestMatchers("/admin/**").permitAll() // admin 쪽 접근 허용
                         .requestMatchers(HttpMethod.GET,"/pins/**").permitAll() // Pin 에 대한 댓글 접근이랑 Pin 조회 허용
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger 접근 허용

@@ -7,9 +7,11 @@ import ensharp.pinterest.domain.pin.dto.response.S3ObjectInfo;
 import ensharp.pinterest.domain.pin.entity.Pin;
 import ensharp.pinterest.domain.pin.repository.PinRepository;
 import ensharp.pinterest.domain.user.entity.User;
-import ensharp.pinterest.domain.user.service.UserService;
+import ensharp.pinterest.domain.user.repository.UserRepository;
 import ensharp.pinterest.global.exception.errorcode.PinErrorCode;
+import ensharp.pinterest.global.exception.errorcode.UserErrorCode;
 import ensharp.pinterest.global.exception.exception.PinException;
+import ensharp.pinterest.global.exception.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PinService {
     private final S3Service s3Service;
-    private final UserService userService;
 
+    // 원래 UserService 로 했는데 순환참조 문제때문에 일단 임시방편으로 repository 참조하게 만듬
+    private final UserRepository userRepository;
     private final PinRepository pinRepository;
 
     /**
@@ -31,6 +34,15 @@ public class PinService {
     public Pin getPinById(String pinId){
         return pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
+    }
+
+    /**
+     * 특정 유저가 올린 Pin 조회
+     */
+    @Transactional(readOnly = true)
+    public List<PinThumbnailResponse> getPinsByUsername(String username){
+        return pinRepository.findAllByUserName(username).stream()
+                .map(PinThumbnailResponse::from).toList();
     }
 
     /**
@@ -53,7 +65,8 @@ public class PinService {
     @Transactional
     public String createPin(String userId, CreatePinRequest createPinRequest) {
 
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         S3ObjectInfo s3ObjectInfo = s3Service.uploadImageToS3(createPinRequest.getImage());
 
@@ -79,19 +92,15 @@ public class PinService {
         Pin targetPin = pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinException(PinErrorCode.PIN_NOT_FOUND));
 
-        System.out.println("targetPin userID : " + targetPin.getUser().getId());
-        System.out.println("parameter userID : " + userId);
-
         // 해당 Pin 을 올린 유저가 아니라면
         if(!targetPin.getUser().getId().equals(userId)){
-            System.out.println("해당 PIN을 올린 유저가 아닙니다!");
             throw new PinException(PinErrorCode.PIN_ACCESS_DENIED);
         }
 
-        // s3Key로 S3에서 Pin 삭제
+        // s3Key 로 S3에서 Pin 삭제
         boolean deleteSuccess = s3Service.deleteImageFromS3(targetPin.getS3Key());
 
-        // Local DB에서도 삭제
+        // S3 삭제 성공 시 DB 에서도 삭제
         pinRepository.delete(targetPin);
     }
 

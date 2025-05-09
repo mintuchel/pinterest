@@ -18,6 +18,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // https 도 추가할까??
+        // localhost 라는 도메인의 모든 포트에서 request 를 쏠 수 있도록 설정
         configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:*"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         // Authorization Content-Type Origin 등을 명시하는 것
