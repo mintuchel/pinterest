@@ -11,12 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 // 매핑할때 @Setter 가 존재해야 Spring 이 필드값을 직접 설정할 수 있음
 @Setter
 @Getter
+@Schema(description = "Pin 생성 요청")
 public class CreatePinRequest {
-    @Schema(description = "핀 제목", example = "엔샵사진")
+    @Schema(description = "Pin 제목", example = "엔샵사진")
     @NotBlank(message = "제목은 필수 입력 값입니다.")
     private String title;
 
-    @Schema(description = "핀 설명", example = "저번주 수요일날 찍은거")
+    @Schema(description = "Pin 설명", example = "저번주 수요일날 찍은거")
     private String description;
 
     @Schema(description = "업로드할 이미지 파일", format = "binary")
