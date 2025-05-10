@@ -12,6 +12,6 @@ public record ChangePasswordRequest(
         String email,
 
         @NotBlank(message = "새로운 비밀번호는 필수 입력 값입니다.")
-        @Schema(description = "비밀번호", example = "ensharp25화이팅")
+        @Schema(description = "비밀번호", example = "ensharp24화이팅")
         String password
 ) { }

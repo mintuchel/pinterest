@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 // of 랑 from 은 정적 팩토리 메서드에서 자주 쓰이는 네이밍 컨벤션이라고 한다
 // of = 명시적인 값들을 기반으로 객체 생성
 // from = 객체를 기반으로 생성
-@Schema(description = "특정 유저 정보 응답")
+@Schema(description = "현재 로그인한 유저 정보 응답")
 public record UserInfoResponse (
         @Schema(description = "이메일 주소", example = "ensharp25@naver.com")
         String email,

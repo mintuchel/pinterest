@@ -34,7 +34,7 @@ public class PinController {
     public ResponseEntity<List<PinThumbnailResponse>> getPinsByQuery(
             @Parameter(
                     description = "검색어",
-                    example = "엔샵"
+                    example = "킬리안 음바페"
             )
             @RequestParam(defaultValue = "") String query){
         return ResponseEntity
