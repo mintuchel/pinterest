@@ -58,7 +58,7 @@ public class FavoriteService {
         User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(pinId);
 
-        Favorite favorite = favoriteRepository.findByUserAndPin(user, pin)
+        Favorite favorite = favoriteRepository.findByUserIdAndPinId(userId, pinId)
                 .orElseThrow(() -> new FavoriteException(FavoriteErrorCode.FAVORITE_NOT_FOUND));
 
         user.getFavorites().remove(favorite); // 연관관계 편의 메서드

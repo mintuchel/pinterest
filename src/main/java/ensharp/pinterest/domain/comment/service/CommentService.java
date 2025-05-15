@@ -29,7 +29,7 @@ public class CommentService {
     public List<CommentInfoResponse> getCommentsByPin(String pinId){
         Pin pin = pinService.getPinById(pinId);
 
-        return commentRepository.findByPinOrderByCreatedAt(pin)
+        return commentRepository.findByPinId(pin.getId())
                 .stream()
                 .map(CommentInfoResponse::from)
                 .toList();
