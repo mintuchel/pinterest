@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface EmailVerificationRepository extends JpaRepository<EmailVerification, String> {
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE email_verification SET verification_code = :verification_code WHERE email = :email", nativeQuery = true)
