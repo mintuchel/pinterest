@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,22 +24,23 @@ public class FavoriteService {
 
     @Transactional(readOnly = true)
     public List<PinThumbnailResponse> getFavoritePins(String userId) {
-        User user = userService.getUserById(userId);
+        userService.existsById(userId);
 
-        List<Favorite> favorites = user.getFavorites();
-
-        List<Pin> pinList = new ArrayList<Pin>();
-        for (Favorite favorite : favorites) {
-            pinList.add(favorite.getPin());
-        }
-
-        return pinList.stream()
+        // map 이랑 stream 으로 처리하는게 중간에 필요한 임시 리스트를 사용하지 않고
+        // 스트림 처리하면서 Favorite -> Pin -> DTO 로 바로 처리가능해서 메모리 효율 측면에서 좋음
+        return favoriteRepository.findByUserId(userId).stream()
+                .map(Favorite::getPin)
                 .map(PinThumbnailResponse::from)
                 .toList();
     }
 
     @Transactional
     public void createFavoritePin(String userId, String pinId) {
+
+        if(favoriteRepository.existsByUserIdAndPinId(userId, pinId)) {
+            throw new FavoriteException(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS);
+        }
+
         User user = userService.getUserById(userId);
         Pin pin = pinService.getPinById(pinId);
 
@@ -49,19 +49,17 @@ public class FavoriteService {
                 .pin(pin)
                 .build();
 
-        user.getFavorites().add(favorite); // 연관관계 편의 메서드
         favoriteRepository.save(favorite);
     }
 
     @Transactional
     public void deleteFavoritePin(String userId, String pinId) {
-        User user = userService.getUserById(userId);
-        Pin pin = pinService.getPinById(pinId);
+        userService.existsById(userId);
+        pinService.existsById(pinId);
 
         Favorite favorite = favoriteRepository.findByUserIdAndPinId(userId, pinId)
                 .orElseThrow(() -> new FavoriteException(FavoriteErrorCode.FAVORITE_NOT_FOUND));
 
-        user.getFavorites().remove(favorite); // 연관관계 편의 메서드
         favoriteRepository.delete(favorite);
     }
 }
