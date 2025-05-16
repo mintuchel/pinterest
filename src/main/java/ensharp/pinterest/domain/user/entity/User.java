@@ -41,8 +41,4 @@ public class User {
     // 상세주소
     @Column(name = "detail_address", nullable = false)
     private String detailAddress;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Favorite> favorites = new ArrayList<>();
 }
