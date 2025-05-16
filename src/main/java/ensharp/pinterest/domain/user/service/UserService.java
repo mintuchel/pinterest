@@ -21,6 +21,13 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
+    public void existsById(String userId) {
+        if(!userRepository.existsById(userId)){
+            throw new UserException(UserErrorCode.USER_NOT_FOUND);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public User getUserById(String userId){
         return userRepository.findById(userId)
                 .orElseThrow(()-> new UserException(UserErrorCode.USER_NOT_FOUND));
