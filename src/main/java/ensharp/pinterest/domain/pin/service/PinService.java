@@ -27,6 +27,13 @@ public class PinService {
     private final UserRepository userRepository;
     private final PinRepository pinRepository;
 
+    @Transactional(readOnly = true)
+    public void existsById(String pinId){
+        if(!pinRepository.existsById(pinId)){
+            throw new PinException(PinErrorCode.PIN_NOT_FOUND);
+        }
+    }
+
     /**
      * 특정 Pin 조회
      */
